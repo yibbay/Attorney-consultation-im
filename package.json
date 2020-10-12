@@ -10,8 +10,13 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "koa": "^2.13.0",
+    "koa-body": "^4.2.0",
+    "koa-views": "^6.3.1",
     "moment": "^2.24.0",
+    "mongoose": "^5.10.9",
     "nodejs-websocket": "^1.7.2",
+    "path": "^0.12.7",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
     "vue": "^2.5.2",

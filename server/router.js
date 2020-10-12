@@ -1,18 +1,19 @@
 const Router = require('koa-router')
-const { Users } = require('./mongodb')
+const { schema } = require('./mongodb')
 const router = new Router
 
-说明：我们通过localhost:8000访问本地服务，默认返回的是根路由，这时可以渲染index页面，如果前面没有配置视图模板，那么将不存在ctx.render方法。koa2建议中间件最好使用异步回调，中间件就是跟在路由后面的异步函数，一条路由可以有一个或者多个中间件，通过next方法决定执不执行下一个中间件
+// 说明：我们通过localhost:8000访问本地服务，默认返回的是根路由，这时可以渲染index页面，如果前面没有配置视图模板，那么将不存在ctx.render方法。koa2建议中间件最好使用异步回调，中间件就是跟在路由后面的异步函数，一条路由可以有一个或者多个中间件，通过next方法决定执不执行下一个中间件
 
 router.get('/', async ctx => {
     await ctx.render('index')
 })
 
 //增
-router.post('/addtion',async ctx => {
+router.post('/user/add',async ctx => {
     const { name, age, sex } = ctx.request.body
-    const user = new Users({
+    const user = new schema.Users({
         name,
+        password,
         age,
         sex
     })
@@ -30,8 +31,8 @@ router.post('/addtion',async ctx => {
 })
 
 //删
-router.get('/deletion',async ctx => {
-    const isSuccess = await Users.deleteMany(ctx.query).then( res => {
+router.get('/user/delete',async ctx => {
+    const isSuccess = await schema.Users.deleteMany(ctx.query).then( res => {
         return res
     }).catch( () => {
         return false
@@ -40,8 +41,8 @@ router.get('/deletion',async ctx => {
 })
 
 //改
-router.get('/modification',async ctx => {
-    const result = await Users.updateMany(
+router.get('/user/update',async ctx => {
+    const result = await schema.Users.updateMany(
         ctx.query,
         {$set:{'name':'MongoDB'}
     }).then( res => {
@@ -53,8 +54,8 @@ router.get('/modification',async ctx => {
 })
 
 //查
-router.get('/locating',async ctx => {
-    const result = await Users.find(ctx.query).then( res => {
+router.get('/user/search',async ctx => {
+    const result = await schema.Users.find(ctx.query).then( res => {
         return res
     }).catch( (err) => {
         return err
