@@ -2,7 +2,7 @@ const Koa = require('koa')
 const { join } = require('path')
 const koaBody = require('koa-body')
 const views = require('koa-views')
-const router = require('./router')   //导入路由模块，下面会有详细代码
+const router = require('./router/index')   //导入路由模块，下面会有详细代码
 const app = new Koa
 
 app

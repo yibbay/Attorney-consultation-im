@@ -9,3 +9,5 @@ let routerMap = {
 for (let key in routerMap) {
     routerMap[key](router)
 }
+
+module.exports = router

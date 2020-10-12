@@ -1,10 +1,12 @@
-exports.default =
+module.exports =
 {   //用Schema定义插入数据的类型
     userId: {
-        required: true
+        required: true,
+        type: Number
     },
     friendId: {
-        required: true
+        required: true,
+        type: Number
     },
     userGroup: {
         type: String,

@@ -2,7 +2,7 @@ const { schema } = require('../mongodb')
 const PREFIX = '/friends'
 const SCHEMA = 'Friends'
 
-exports.default = (router) => {
+module.exports = (router) => {
     //增
     router.post(`${PREFIX}/add`, async ctx => {
         const { name, age, sex } = ctx.request.body
