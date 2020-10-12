@@ -7,10 +7,12 @@ exports.default = (router) => {
     router.post(`${PREFIX}/add`, async ctx => {
         const { name, age, sex } = ctx.request.body
         const user = new schema[SCHEMA]({
-            name,
-            password,
-            age,
-            sex
+            userId,
+            friendId,
+            userGroup,
+            friendGroup,
+            userLabels,
+            friendLabels
         })
         //save方法是异步的，必须等待它执行完成后才能ctx.body，否则，ctx.body是无法返回到页面的
         const isSuccess = await user.save()

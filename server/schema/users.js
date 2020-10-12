@@ -1,8 +1,11 @@
-const { Schema } = require('../mongodb')
+// const { Schema } = require('../mongodb')
 
 exports.default =
 {   //用Schema定义插入数据的类型
-    userId: Schema.Types.ObjectId,
+    userId: {
+        type: Number,
+        default: 1
+    },
     name: {
         type: String,
         required: true
