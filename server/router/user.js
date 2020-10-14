@@ -3,6 +3,7 @@ const PREFIX = '/user'
 const SCHEMA = 'Users'
 
 module.exports = (router) => {
+    console.log('router init')
     //增
     router.post(`${PREFIX}/add`, async ctx => {
         const { name, age, sex } = ctx.request.body
