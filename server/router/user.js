@@ -52,7 +52,7 @@ module.exports = (router) => {
     })
 
     //查
-    router.get(`${PREFIX}/search`, async ctx => {
+    router.post(`${PREFIX}/search`, async ctx => {
         const result = await schema[SCHEMA].find(ctx.query).then(res => {
             return res
         }).catch((err) => {
