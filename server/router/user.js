@@ -6,7 +6,7 @@ module.exports = (router) => {
     console.log('router init')
     //增
     router.post(`${PREFIX}/add`, async ctx => {
-        const { name, age, sex } = ctx.request.body
+        const { userId, name, password, age, sex } = ctx.request.body
         const user = new schema[SCHEMA]({
             userId,
             name,
