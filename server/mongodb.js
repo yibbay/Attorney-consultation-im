@@ -3,7 +3,7 @@ const schemasConstruction = require('./schema/index')
 console.log('schemasConstruction')
 console.log(schemasConstruction)
 //新版mongoose推荐使用createConnection连接数据库，不要使用connect
-const db = mongoose.createConnection('mongodb://localhost:27017/test',{
+const db = mongoose.createConnection('mongodb://129.211.91.209:27017/test', {
 　//添加这两个参数为了避免警告
     useNewUrlParser:true,
     useUnifiedTopology: true

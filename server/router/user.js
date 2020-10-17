@@ -3,9 +3,8 @@ const PREFIX = '/user'
 const SCHEMA = 'Users'
 
 module.exports = (router) => {
-    console.log('router init')
     //增
-    router.post(`${PREFIX}/add`, async ctx => {
+    router.post(`${PREFIX}/add`, async (ctx) => {
         const { userId, name, password, age, sex } = ctx.request.body
         const user = new schema[SCHEMA]({
             userId,
@@ -14,50 +13,53 @@ module.exports = (router) => {
             age,
             sex
         })
-        //save方法是异步的，必须等待它执行完成后才能ctx.body，否则，ctx.body是无法返回到页面的
-        const isSuccess = await user.save()
+        await user.save()
             .then(() => {
-                console.log('保存成功')
-                return true
+                ctx.success(true);
             })
             .catch(err => {
-                console.log(err)
-                return false
+                ctx.fail(err);
             })
-        ctx.body = isSuccess ? '添加成功' : '添加失败'
     })
 
     //删
     router.get(`${PREFIX}/delete`, async ctx => {
-        const isSuccess = await schema[SCHEMA].deleteMany(ctx.query).then(res => {
-            return res
-        }).catch(() => {
-            return false
+        await schema[SCHEMA].deleteMany(ctx.query).then(res => {
+            ctx.success(res);
+        }).catch((err) => {
+            ctx.fail(err);
         })
-        ctx.body = isSuccess ? `成功删除了${isSuccess.n}条数据` : '删除失败'
     })
 
     //改
     router.get(`${PREFIX}/update`, async ctx => {
-        const result = await schema[SCHEMA].updateMany(
+        await schema[SCHEMA].updateMany(
             ctx.query,
             {
                 $set: { 'name': 'MongoDB' }
             }).then(res => {
-                return res
-            }).catch(() => {
-                return false
+                ctx.success(res);
+            }).catch((err) => {
+                ctx.fail(err);
             })
-        ctx.body = result ? '修改成功' : '修改失败'
     })
 
     //查
-    router.post(`${PREFIX}/search`, async ctx => {
-        const result = await schema[SCHEMA].find(ctx.query).then(res => {
-            return res
+    router.post(`${PREFIX}/search`, async (ctx) => {
+        let {pageNum, pageSize} = ctx.request.body
+        console.log(ctx.request.body)
+        await Promise.all([
+            schema[SCHEMA].find(ctx.query).count(),
+            schema[SCHEMA].find(ctx.query).limit(pageSize).skip((pageNum - 1) * pageSize)
+        ]).then(datas => {
+            let total = datas[0];
+            let list = datas[1] || [];
+            ctx.success({
+                total,
+                list
+            });
         }).catch((err) => {
-            return err
+            ctx.fail(err);
         })
-        ctx.body = result
     })
 };
