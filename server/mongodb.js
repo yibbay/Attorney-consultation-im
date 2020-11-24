@@ -6,7 +6,7 @@ console.log(schemasConstruction)
 const db = mongoose.createConnection('mongodb://129.211.91.209:27017/test', {
 　//添加这两个参数为了避免警告
     useNewUrlParser:true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
 })
 
 //用es6的Promise覆盖mongoose自实现的Promise，我们用es6的Promise就好了

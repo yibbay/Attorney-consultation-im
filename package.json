@@ -10,6 +10,8 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "koa": "^2.13.0",
     "koa-body": "^4.2.0",
     "koa-cors": "0.0.16",
@@ -17,6 +19,7 @@
     "koa-views": "^6.3.1",
     "moment": "^2.24.0",
     "mongoose": "^5.10.9",
+    "node-rsa": "^1.1.1",
     "nodejs-websocket": "^1.7.2",
     "path": "^0.12.7",
     "stylus": "^0.54.5",
@@ -41,6 +44,7 @@
     "file-loader": "^1.1.4",
     "friendly-errors-webpack-plugin": "^1.6.1",
     "html-webpack-plugin": "^2.30.1",
+    "jsencrypt": "^3.0.0-rc.1",
     "node-notifier": "^5.1.2",
     "optimize-css-assets-webpack-plugin": "^3.2.0",
     "ora": "^1.2.0",

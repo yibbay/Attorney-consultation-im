@@ -2,10 +2,14 @@
 
 module.exports =
 {   //用Schema定义插入数据的类型
-    userId: Number,
+    phone: {
+        type: String,
+        index: true,
+        unique: true
+    },
     name: {
         type: String,
-        required: true
+        required: false
     },
     password: {
         type: String,
@@ -19,12 +23,11 @@ module.exports =
     intro: {
         type: String,
     },
-    createAt: {type: Date, default: Date.now},
-    updateAt: {type: Date, default: Date.now},
     //用户类型
     userType: String
 }, {
     versionKey: false, timestamps: {
-        createdAt: "created"
+        createdAt: "createAt",
+        updatedAt: "updatedAt"
     }
 }

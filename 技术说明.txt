@@ -1,0 +1,2 @@
+pm2 log name 查看pm2某个日志
+

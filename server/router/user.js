@@ -1,14 +1,79 @@
 const { schema } = require('../mongodb')
 const PREFIX = '/user'
 const SCHEMA = 'Users'
+const NodeRSA = require('node-rsa');
+const fs = require('fs');
+const privateKeyPath = './pem/private.pem'
+const publicKeyPath='./pem/public.pem'
+
+let PRIVATEKEY;
+
+// 通过私钥解密密码
+function getDecryptPassword (password) {
+    return new Promise((resolve, reject) => {
+        if (PRIVATEKEY) {
+            resolve(PRIVATEKEY.decrypt(password,'utf8'))
+            return;
+        }
+        fs.exists(privateKeyPath, function (exists) {
+            if (exists) {
+                var pem = fs.readFileSync(privateKeyPath, 'utf8')
+                PRIVATEKEY = new NodeRSA(pem);
+                PRIVATEKEY.setOptions({ encryptionScheme: 'pkcs1' });
+                resolve(PRIVATEKEY.decrypt(password,'utf8'))
+            } else {
+                reject(false)
+            }
+        })
+    })
+};
+
+
 
 module.exports = (router) => {
+    // 登录 
+    router.post(`${PREFIX}/login`, async (ctx) => {
+        const { phone, password } = ctx.request.body
+        
+        await schema[SCHEMA].findOne({ phone }).then(async res => {
+            if (!res) {
+                ctx.fail('账号不存在');
+            } else {
+                let decryptPassword = await getDecryptPassword(password);
+                let decryptResPassword = await getDecryptPassword(res.password);
+
+                if (decryptPassword === decryptResPassword) {
+                    ctx.success(res);
+                } else {
+                    ctx.fail('密码错误');
+                }
+            }
+        }).catch((err) => {
+            ctx.fail(err);
+        })
+
+    })
+    // 注册 
+    router.post(`${PREFIX}/register`, async (ctx) => {
+        const { phone, password } = ctx.request.body
+        const user = new schema[SCHEMA]({
+            phone,
+            password,
+        })
+        await user.save()
+            .then(() => {
+                ctx.success(true);
+            })
+            .catch(err => {
+                ctx.fail(err);
+            })
+    })
     //增
     router.post(`${PREFIX}/add`, async (ctx) => {
         const { userId, name, password, age, sex } = ctx.request.body
         const user = new schema[SCHEMA]({
-            userId,
             name,
+            phone,
             password,
             age,
             sex
@@ -46,7 +111,7 @@ module.exports = (router) => {
 
     //查
     router.post(`${PREFIX}/search`, async (ctx) => {
-        let {pageNum, pageSize} = ctx.request.body
+        let { pageNum, pageSize } = ctx.request.body
         console.log(ctx.request.body)
         await Promise.all([
             schema[SCHEMA].find(ctx.query).count(),
@@ -61,5 +126,10 @@ module.exports = (router) => {
         }).catch((err) => {
             ctx.fail(err);
         })
+    })
+	
+	// 测
+    router.get(`${PREFIX}/test`, async (ctx) => {
+        ctx.success({title: "连接成功"});
     })
 };
