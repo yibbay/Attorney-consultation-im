@@ -9,6 +9,8 @@ const routerResponse = require('./middleware/routerResponse')
 const app = new Koa
 
 app
+    .use(cors())
+
     .use(views(join(__dirname, "views"), {
         //配置视图模板，html文件存放到文件夹views里面
         //node的一个特点就是服务端渲染，这里可以直接配置为html页面，也可配置为pug等模板文件
@@ -20,7 +22,6 @@ app
     
     .use(router.routes()) //1
     .use(router.allowedMethods()) //2
-    .use(cors())
     //步骤1，2将路由绑定到Koa的实例app身上
     .listen(8000, err => {
         !err && console.log('服务启动成功，端口监听在8000')

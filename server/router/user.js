@@ -138,8 +138,8 @@ module.exports = (router) => {
     router.get(`${PREFIX}/pdf`, async (ctx) => {
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
-        await page.goto('https://news.ycombinator.com', { waitUntil: 'networkidle2' });
-        await page.pdf({ path: 'hn.pdf', format: 'A4' });
+        await page.goto('http://localhost:7001/pdf', { waitUntil: 'networkidle2' });
+        await page.pdf({ path: 'hn.pdf'});
 
         await browser.close();
         ctx.success({ title: "连接成功" });
