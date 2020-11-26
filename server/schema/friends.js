@@ -15,14 +15,6 @@ module.exports =
     friendGroup: {
         type: String,
         default: ""
-    },
-    userLabels: {
-        type: String,
-        default: ""
-    },
-    friendLabels: {
-        type: String,
-        default: ""
     }
 }, {
     versionKey: false, timestamps: {

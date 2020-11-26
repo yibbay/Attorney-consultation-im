@@ -4,15 +4,16 @@ const SCHEMA = 'Users'
 const NodeRSA = require('node-rsa');
 const fs = require('fs');
 const privateKeyPath = './pem/private.pem'
-const publicKeyPath='./pem/public.pem'
+const publicKeyPath = './pem/public.pem'
+const puppeteer = require('puppeteer');
 
 let PRIVATEKEY;
 
 // 通过私钥解密密码
-function getDecryptPassword (password) {
+function getDecryptPassword(password) {
     return new Promise((resolve, reject) => {
         if (PRIVATEKEY) {
-            resolve(PRIVATEKEY.decrypt(password,'utf8'))
+            resolve(PRIVATEKEY.decrypt(password, 'utf8'))
             return;
         }
         fs.exists(privateKeyPath, function (exists) {
@@ -20,7 +21,7 @@ function getDecryptPassword (password) {
                 var pem = fs.readFileSync(privateKeyPath, 'utf8')
                 PRIVATEKEY = new NodeRSA(pem);
                 PRIVATEKEY.setOptions({ encryptionScheme: 'pkcs1' });
-                resolve(PRIVATEKEY.decrypt(password,'utf8'))
+                resolve(PRIVATEKEY.decrypt(password, 'utf8'))
             } else {
                 reject(false)
             }
@@ -34,7 +35,7 @@ module.exports = (router) => {
     // 登录 
     router.post(`${PREFIX}/login`, async (ctx) => {
         const { phone, password } = ctx.request.body
-        
+
         await schema[SCHEMA].findOne({ phone }).then(async res => {
             if (!res) {
                 ctx.fail('账号不存在');
@@ -127,9 +128,20 @@ module.exports = (router) => {
             ctx.fail(err);
         })
     })
-	
-	// 测
+
+    // 测
     router.get(`${PREFIX}/test`, async (ctx) => {
-        ctx.success({title: "连接成功"});
+        ctx.success({ title: "连接成功" });
+    })
+
+    // 测
+    router.get(`${PREFIX}/pdf`, async (ctx) => {
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+        await page.goto('https://news.ycombinator.com', { waitUntil: 'networkidle2' });
+        await page.pdf({ path: 'hn.pdf', format: 'A4' });
+
+        await browser.close();
+        ctx.success({ title: "连接成功" });
     })
 };

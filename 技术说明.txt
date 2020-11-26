@@ -1,2 +1,10 @@
 pm2 log name 查看pm2某个日志
+pm2 start name
+pm2 stop name
+
+// linux mongodb安装
+https://www.cnblogs.com/tjp40922/p/11870321.html
+
+// linux mongodb 操作
+https://www.cnblogs.com/cmyxn/p/6610297.html
 
