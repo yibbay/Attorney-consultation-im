@@ -2,6 +2,8 @@ const Koa = require('koa')
 const { join } = require('path')
 const koaBody = require('koa-body')
 const views = require('koa-views')
+const sta = require('koa-static')
+const path = require('path')
 var cors = require("cors");
 const router = require('./router/index')   //导入路由模块，下面会有详细代码
 const routerResponse = require('./middleware/routerResponse')
@@ -9,13 +11,8 @@ const routerResponse = require('./middleware/routerResponse')
 const app = new Koa
 
 app
-    .use(cors())
 
-    .use(views(join(__dirname, "views"), {
-        //配置视图模板，html文件存放到文件夹views里面
-        //node的一个特点就是服务端渲染，这里可以直接配置为html页面，也可配置为pug等模板文件
-        extension: "html"
-    }))
+    .use(sta('./pdf_down'))
     
     .use(routerResponse())
     .use(koaBody()) //处理post请求
