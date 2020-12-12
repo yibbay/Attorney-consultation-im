@@ -6,6 +6,7 @@ const fs = require('fs');
 const privateKeyPath = './pem/private.pem'
 const publicKeyPath = './pem/public.pem'
 const puppeteer = require('puppeteer');
+const jwt = require('jsonwebtoken');
 
 let PRIVATEKEY;
 
@@ -36,20 +37,27 @@ module.exports = (router) => {
     router.post(`${PREFIX}/login`, async (ctx) => {
         const { phone, password } = ctx.request.body
 
-        await schema[SCHEMA].findOne({ phone }).then(async res => {
+        await schema[SCHEMA].findOne({ phone } ).then(async res => {
             if (!res) {
                 ctx.fail('账号不存在');
             } else {
                 let decryptPassword = await getDecryptPassword(password);
                 let decryptResPassword = await getDecryptPassword(res.password);
-
                 if (decryptPassword === decryptResPassword) {
+                    res = res.toObject();
+                    res.password = undefined;
+                    let token = jwt.sign({
+                        phone: res.phone
+                      }, 'secret', { expiresIn: 60 * 60 });
+
+                    res.token = token;
                     ctx.success(res);
                 } else {
-                    ctx.fail('密码错误');
+                    ctx.fail('账号或密码错误');
                 }
             }
         }).catch((err) => {
+            console.log(err)
             ctx.fail(err);
         })
 
@@ -148,10 +156,7 @@ module.exports = (router) => {
 
         await browser.close();
         setTimeout(function () {
-            console.log('delete')
-            fs.unlink(`pdf_down/${companyName}-${name}.pdf`, () => {
-
-            })
+            // fs.unlink(`pdf_down/${companyName}-${name}.pdf`, () => {})
         }, 10000)
         ctx.success({});
     })
